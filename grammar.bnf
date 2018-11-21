@@ -1,0 +1,70 @@
+<program>    ::= <block>
+
+<block>      ::= "{" <decls> <stmts> "}"
+
+<decls>      ::= <decl> <decls>
+               | ""
+<decl>       ::= <type> "id" ";"
+
+<type>       ::= "basic" <types>
+
+<types>      ::= "[" "num" "]" <types>
+               | ""
+
+<stmts>      ::= <stmt> <stmts>
+               | ""
+<stmt>       ::= <loc> "=" <bool> ";"
+               | <matched_if>
+               | <open_if>
+               | "while" "(" <bool> ")" <stmt>
+               | "do" <stmt> "while" "(" <bool> ")" ";"
+               | "break" ";"
+               | <block>
+
+<matched_if> ::= "if" "(" <bool> ")" "then" <matched_if> "else" <matched_if>
+
+<open_if>    ::= "if" "(" <bool> ")" "then" <stmt>
+               | "if" "(" <bool> ")" "then" <matched_if> "else" <open_if>
+
+<loc>        ::= "id" <locs>
+
+<locs>       ::= "[" <bool> "]" <locs>
+               | ""
+
+<bool>       ::= <join>
+               | <join> "||" <bool>
+<join>       ::= <equality>
+               | <equality> "&&" <join>
+
+<equality>   ::= <rel>
+               | <rel> "==" <equality>
+               | <rel> "!=" <equality>
+
+<rel>        ::= <expr> "<" <expr>
+               | <expr> "<=" <expr>
+               | <expr> ">=" <expr>
+               | <expr> ">" <expr>
+               | <expr>
+
+<expr>       ::= <term> <exprs>
+
+<exprs>      ::= "+" <term> <exprs>
+               | "−" <term> <exprs>
+               | ""
+
+<term>       ::= <unary> <terms>
+
+<terms>      ::= "∗" <unary> <terms>
+               | "/" <unary> <terms>
+               | ""
+
+<unary>      ::= "!" <unary>
+               | "−" <unary>
+               | <factor>
+
+<factor>     ::= "(" <bool> ")"
+               | <loc>
+               | "num"
+               | "real"
+               | "true"
+               | "false"
