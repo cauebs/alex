@@ -39,6 +39,8 @@ def alex(string: str) -> Generator[str, None, List[LexicalError]]:
         '<=', '=', '==', '>', '>=', '[', ']', '{', '||', '}', '−', '∗'
     ]
 
+    string = string.strip()
+
     automaton = tokens_to_trie(tokens)
     current = automaton
 
