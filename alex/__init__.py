@@ -47,12 +47,15 @@ def alex(string: str) -> Generator[str, None, List[LexicalError]]:
     separators = whitespace + punctuation
     previous = None
     panic = False
-    errors = []
-
     pending = False
+
+    errors = []
 
     for line_number, line in enumerate(string.splitlines(), start=1):
         for column_number, character in enumerate(line, start=1):
+            if not pending and character in whitespace:
+                continue
+
             pending = True
 
             # received one of the expected symbols
@@ -62,6 +65,7 @@ def alex(string: str) -> Generator[str, None, List[LexicalError]]:
                 previous = character
                 continue
 
+            # if in panic mode, just skip until it's possible to restart
             if panic:
                 continue
 
@@ -83,6 +87,9 @@ def alex(string: str) -> Generator[str, None, List[LexicalError]]:
 
                 # now reset the automaton and give this character another go
                 current = automaton
+                if character in whitespace:
+                    continue
+
                 if character in current.transitions:
                     panic = False
                     current = current.transitions[character]
@@ -90,9 +97,9 @@ def alex(string: str) -> Generator[str, None, List[LexicalError]]:
                     continue
 
             # no tokens start with this symbol
-            if not panic and character not in whitespace:
+            if not panic:
                 panic = True
-                expected = current.transitions.keys()
+                expected = sorted(current.transitions.keys())
                 errors.append(LexicalError(
                     line_number,
                     column_number,
@@ -111,7 +118,7 @@ def alex(string: str) -> Generator[str, None, List[LexicalError]]:
         yield current.accepts
     # reached EOF while scanning
     elif pending:
-        expected = current.transitions.keys()
+        expected = sorted(current.transitions.keys())
         errors.append(LexicalError(
             line_number,
             column_number,
