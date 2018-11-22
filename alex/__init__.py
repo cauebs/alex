@@ -54,6 +54,7 @@ def alex(string: str) -> Generator[str, None, List[LexicalError]]:
     for line_number, line in enumerate(string.splitlines(), start=1):
         for column_number, character in enumerate(line, start=1):
             if not pending and character in whitespace:
+                panic = False
                 continue
 
             pending = True
@@ -99,6 +100,7 @@ def alex(string: str) -> Generator[str, None, List[LexicalError]]:
             # no tokens start with this symbol
             if not panic:
                 panic = True
+                pending = False
                 expected = sorted(current.transitions.keys())
                 errors.append(LexicalError(
                     line_number,
