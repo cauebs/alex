@@ -70,16 +70,14 @@ def alex(string: str) -> Generator[str, None, List[LexicalError]]:
 
                 # after a token we expect only whitespace and punctuation
                 if character not in separators and previous not in separators:
-                    error = LexicalError(
+                    errors.append(LexicalError(
                         line_number,
                         column_number,
                         (
                             'Expected whitespace or punctuation '
                             f'after {repr(current.accepts)}.'
                         ),
-                    )
-                    errors.append(error)
-                    print(error)
+                    ))
 
                 # now reset the automaton and give this character another go
                 current = automaton
@@ -93,16 +91,14 @@ def alex(string: str) -> Generator[str, None, List[LexicalError]]:
             if not panic and character not in whitespace:
                 panic = True
                 expected = current.transitions.keys()
-                error = LexicalError(
+                errors.append(LexicalError(
                     line_number,
                     column_number,
                     (
                         f"Expected one of {{{', '.join(expected)}}}, "
                         f'got {repr(character)}.'
                     ),
-                )
-                errors.append(error)
-                print(error)
+                ))
 
             current = automaton
 
@@ -114,15 +110,13 @@ def alex(string: str) -> Generator[str, None, List[LexicalError]]:
     # reached EOF while scanning
     elif pending:
         expected = current.transitions.keys()
-        error = LexicalError(
+        errors.append(LexicalError(
             line_number,
             column_number,
             (
                 f"Expected one of {{{', '.join(expected)}}}, "
                 f'reached EOF.'
             ),
-        )
-        errors.append(error)
-        print(error)
+        ))
 
     return errors
