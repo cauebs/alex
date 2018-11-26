@@ -11,4 +11,4 @@ def call_alex_and_print_errors(string):
 
 with open(argv[1]) as f:
     for token in call_alex_and_print_errors(f.read()):
-        print(repr(token))
+        print(token)

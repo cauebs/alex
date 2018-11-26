@@ -4,25 +4,25 @@ from . import tokens_and_errors
 def test_1():
     assert tokens_and_errors("""
     {
-        basic id;
-        basic[num][num] id;
+        while if;
+        while[123][123] if;
     }
     """) == (
         [
             '{',
 
-            'basic',
-            'id',
+            'while',
+            'if',
             ';',
 
-            'basic',
+            'while',
             '[',
             'num',
             ']',
             '[',
             'num',
             ']',
-            'id',
+            'if',
             ';',
 
             '}'
@@ -33,28 +33,28 @@ def test_1():
 
 def test_2():
     assert tokens_and_errors("""
-        id == num;
-        id==num;
-        id <= num;
-        id<=num;
+        if == 1;
+        if==564;
+        if <= 4353;
+        if<=543;
     """) == (
         [
-            'id',
+            'if',
             '==',
             'num',
             ';',
 
-            'id',
+            'if',
             '==',
             'num',
             ';',
 
-            'id',
+            'if',
             '<=',
             'num',
             ';',
 
-            'id',
+            'if',
             '<=',
             'num',
             ';',
@@ -65,22 +65,22 @@ def test_2():
 
 def test_3():
     assert tokens_and_errors("""
-        if(id==id)then
-            id = num;else{
+        if(if==if)then
+            if = 11.111;else{
             }
     """) == (
         [
             'if',
             '(',
-            'id',
+            'if',
             '==',
-            'id',
+            'if',
             ')',
             'then',
 
-            'id',
+            'if',
             '=',
-            'num',
+            'real',
             ';',
             'else',
             '{',
@@ -100,7 +100,7 @@ def test_4():
 
 def test_5():
     assert tokens_and_errors("""
-        ;while; (;id !=; id;) {
+        ;while; (;if !=; if;) {
             if (==) then else
             true false;break
         };;;;
@@ -111,10 +111,10 @@ def test_5():
             ';',
             '(',
             ';',
-            'id',
+            'if',
             '!=',
             ';',
-            'id',
+            'if',
             ';',
             ')',
             '{',
@@ -146,5 +146,19 @@ def test_6():
             '=',
             '>',
         ],
+        []
+    )
+
+
+def test_7():
+    assert tokens_and_errors("i") == (
+        ['id'],
+        []
+    )
+
+
+def test_8():
+    assert tokens_and_errors("ife") == (
+        ['id'],
         []
     )
