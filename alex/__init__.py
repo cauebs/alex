@@ -5,7 +5,7 @@ from typing import Dict, Generator, Iterable, List, NamedTuple, Optional
 _TOKENS = [
     'basic', 'true', 'false', 'break', 'do', 'else',
     'if', 'then', 'while', '!', '!=', '&&', '(', ')', '+', '/', ';', '<',
-    '<=', '=', '==', '>', '>=', '[', ']', '{', '||', '}', '−', '∗'
+    '<=', '=', '==', '>', '>=', '[', ']', '{', '||', '}', '−', '*'
 ]
 
 id_chars = ascii_letters + '_'
